@@ -4,17 +4,17 @@ create-rabbit-container:
 run-rabbit:
 	docker start myproject-rmq
 
-run-kodok:
+ run-kodok:
 	figlet Kodok
 	export KODOK_HTTP_PORT=3011
-    export KODOK_EVENT=kodok
+	export KODOK_EVENT=kodok
 	cd kodok
 	npm start
 
-run-siput:
+ run-siput:
 	figlet siput
 	export SIPUT_HTTP_PORT=3012
-    export SIPUT_EVENT=siput
+	export SIPUT_EVENT=siput
 	cd siput
 	npm start
 
@@ -27,12 +27,10 @@ test-all:
 	curl http://localhost:3012/
 
 build-kodok-image:
-	cd kodok
-	docker build . -t kodok
+	cd kodok && docker build -t kodok .
 
 build-siput-image:
-	cd kodok
-	docker build . -t siput
+	cd siput && docker build -t siput .
 
 create-kodok-container:
 	docker run --name kodok -e RMQ_HOST=0.0.0.0 -e RMQ_PORT=5672 -e RMQ_USER=root -e RMQ_PASSWORD=toor -e RMQ_VHOST=/ -p 3000:8081 -d kodok

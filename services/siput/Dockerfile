@@ -1,15 +1,19 @@
-FROM node:lts
-LABEL SERVICE siput
+FROM node:10
 
-# define environments
-ENV SERVICE_NAME siput
+# Create app directory
+WORKDIR /usr/src/app
 
-# Create and set the workdir
-RUN mkdir -p /app
-WORKDIR /app
+# Install app dependencies
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# where available (npm@5+)
+COPY package*.json ./
 
-# copy current directory to workdir
-ADD . /app
-RUN npm install --production
+RUN npm install
+# If you are building your code for production
+# RUN npm ci --only=production
 
-CMD npm start
+# Bundle app source
+COPY . .
+
+EXPOSE 3000
+CMD [ "node", "main.js" ]
