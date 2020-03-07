@@ -4,19 +4,13 @@ create-rabbit-container:
 run-rabbit:
 	docker start myproject-rmq
 
- run-kodok:
+run-kodok:
 	figlet Kodok
-	export KODOK_HTTP_PORT=3011
-	export KODOK_EVENT=kodok
-	cd kodok
-	npm start
+	export KODOK_HTTP_PORT=3011 && export KODOK_EVENT=kodok && export RMQ_HOST=0.0.0.0 && export RMQ_PORT=5672 && export RMQ_USER=root && export RMQ_PASSWORD=toor && export RMQ_VHOST=/ && cd kodok && npm start
 
- run-siput:
+run-siput:
 	figlet siput
-	export SIPUT_HTTP_PORT=3012
-	export SIPUT_EVENT=siput
-	cd siput
-	npm start
+	export SIPUT_HTTP_PORT=3012 && export SIPUT_EVENT=siput && export RMQ_HOST=0.0.0.0 && export RMQ_PORT=5672 && export RMQ_USER=root && export RMQ_PASSWORD=toor && export RMQ_VHOST=/ && cd siput && npm start
 
 test-all:
 	curl http://localhost:3011/
@@ -32,17 +26,23 @@ build-kodok-image:
 build-siput-image:
 	cd siput && docker build -t siput .
 
+create-docker-network:
+	docker network create mynetwork
+
+connect-rabbit-to-network:
+	docker network connect mynetwork myproject-rabbitmq
+
 create-kodok-container:
-	docker run --name kodok -e RMQ_HOST=0.0.0.0 -e RMQ_PORT=5672 -e RMQ_USER=root -e RMQ_PASSWORD=toor -e RMQ_VHOST=/ -p 3000:8081 -d kodok
+	docker run --name gamabunta --net=mynetwork -e RMQ_HOST=myproject-rabbitmq -e RMQ_PORT=5672 -e RMQ_USER=root -e RMQ_PASSWORD=toor -e RMQ_VHOST=/ -p 8081:3000 -it -d kodok
 
 create-siput-container:
-	docker run --name siput -e RMQ_HOST=0.0.0.0 -e RMQ_PORT=5672 -e RMQ_USER=root -e RMQ_PASSWORD=toor -e RMQ_VHOST=/ -p 3000:8082 -d siput
+	docker run --name katsuyu --net=mynetwork -e RMQ_HOST=myproject-rabbitmq -e RMQ_PORT=5672 -e RMQ_USER=root -e RMQ_PASSWORD=toor -e RMQ_VHOST=/ -p 8082:3000 -it -d siput
 
 run-kodok-container:
-	docker start kodok
+	docker start gamabunta
 
 run-siput-container:
-	docker start kodok
+	docker start katsuyu
 
 test-all-docker:
 	curl http://localhost:8081/

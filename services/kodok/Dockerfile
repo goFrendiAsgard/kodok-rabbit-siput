@@ -14,6 +14,8 @@ RUN npm install
 
 # Bundle app source
 COPY . .
+RUN ls
+
 
 EXPOSE 3000
 CMD [ "node", "main.js" ]
