@@ -1,0 +1,36 @@
+module.exports = {
+    serviceName: 'kodok',
+
+    // Configurations
+    httpPort: process.env.KODOK_HTTP_PORT || 3000,
+    rmq: {
+        host: process.env.RMQ_HOST || "localhost",
+        port: process.env.RMQ_PORT || 5672,
+        user: process.env.RMQ_USER || "root",
+        password: process.env.RMQ_PASSWORD || "toor",
+        vhost: process.env.RMQ_VHOST || "/",
+    },
+    rmqEvent: process.env.KODOK_EVENT || "kodok",
+
+    // Components
+    logger: console,
+
+    // Status of the service. Typically related to kubernetes probe (https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/)
+    status: {
+        _isAlive: true,
+        _isReady: true,
+        setLiveness: function (liveness) {
+            this._isAlive = liveness;
+        },
+        setReadiness: function (readiness) {
+            this._isReady = readiness;
+        },
+        getLiveness: function () {
+            return this._isAlive;
+        },
+        getReadiness: function () {
+            return this._isReady;
+        }
+    }
+
+}
