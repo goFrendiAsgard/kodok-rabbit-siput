@@ -1,4 +1,8 @@
-FROM node:10
+FROM node:lts
+LABEL SERVICE siput
+
+# define environments
+ENV SERVICE_NAME siput
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,4 +20,4 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "node", "main.js" ]
+CMD npm start

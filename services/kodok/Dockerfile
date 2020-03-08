@@ -1,4 +1,8 @@
-FROM node:10
+FROM node:lts
+LABEL SERVICE kodok
+
+# define environments
+ENV SERVICE_NAME kodok
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -14,8 +18,6 @@ RUN npm install
 
 # Bundle app source
 COPY . .
-RUN ls
-
 
 EXPOSE 3000
-CMD [ "node", "main.js" ]
+CMD npm start
