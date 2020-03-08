@@ -15,7 +15,7 @@ async function main() {
         const rmq = await createRmq(serviceDesc, serviceDesc.rmq, amqplib);
 
         // Http routes
-        app.all('/', (req, res) => {
+        app.all('/', (_, res) => {
             return res.send('Hai, di sini kodok');
         });
 
